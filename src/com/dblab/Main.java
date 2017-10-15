@@ -57,7 +57,7 @@ public class Main {
             String mydatabase = "digiLab";
             String url = "jdbc:mysql://" + serverName + "/" + mydatabase;
 
-            String username = "farzad";
+            String username = "digiLab";
             String password = "12345";
             try{
                 Connection connection = DriverManager.getConnection(url, username, password);
