@@ -1,17 +1,13 @@
 package com.dblab;
 
-import com.mysql.cj.api.jdbc.JdbcConnection;
 import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.*;
-import com.mysql.cj.jdbc.Driver;
-
 import java.io.IOException;
 import java.util.List;
 
