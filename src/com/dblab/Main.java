@@ -12,9 +12,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) {
-	// write your code here
+        // write your code here
         TelegramBot bot = new TelegramBot("444383849:AAHL2WwNZrGYuZDu3jGORLP5kbSOSJWzO2I");
         GetUpdates getUpdates = new GetUpdates().limit(100).offset(0).timeout(0);
         JdbcLogin jdbcLogin = new JdbcLogin();
@@ -60,6 +59,38 @@ public class Main {
                 return connection;
             }catch (SQLException e){e.printStackTrace();}
             return null;
+        }
+    }
+
+    public interface Statelike {
+        void writeName(StateContext context, String name);
+    }
+
+    public class StateContext {
+        private Statelike myState;
+        StateContext() {
+            setState(new StateLowerCase());
+        }
+
+        /**
+         * Setter method for the state.
+         * Normally only called by classes implementing the State interface.
+         * @param newState the new state of this context
+         */
+        void setState(final Statelike newState) {
+            myState = newState;
+        }
+
+        public void writeName(final String name) {
+            myState.writeName(this, name);
+        }
+    }
+
+    class StateLowerCase implements Statelike {
+        @Override
+        public void writeName(final StateContext context, final String name) {
+            System.out.println(name.toLowerCase());
+            //context.setState(new StateMultipleUpperCase());
         }
     }
 }
