@@ -4,7 +4,7 @@ package com.dblab;
  * Created by sana on 10/29/2017.
  */
 public class SQLHandler {
-    public void select(String tableName, String[] selectedField, String[] condition){
+    public String select(String tableName, String[] selectedField, String[] condition){
         String selectInstruction = new String("SELECT ");
 
         for (int i = 0; i < selectedField.length; i++) {
@@ -22,11 +22,12 @@ public class SQLHandler {
                 selectInstruction = selectInstruction + condition[i] + ";";
             }
         }
+        return selectInstruction;
     }// end of select
 
 
     //UPDATE table_name SET column_name = value [, column_name = value ...] [WHERE condition]
-    public void update(String tableName, String[] updatedFieldValue, String[] condition){
+    public String update(String tableName, String[] updatedFieldValue, String[] condition){
         String updateInstruction = new String("UPDATE ");
         updateInstruction = updateInstruction + tableName + " SET ";
 
@@ -45,11 +46,12 @@ public class SQLHandler {
                 updateInstruction = updateInstruction + condition[i] + ";";
             }
         }
+        return updateInstruction;
     }// end of update
 
 
     //DELETE FROM table_name [WHERE condition];
-    public void delete(String tableName, String[] deletedFieldValue, String[] condition){
+    public String delete(String tableName, String[] deletedFieldValue, String[] condition){
         String deleteInstruction = new String("DELETE ");
 
         for (int i = 0; i < deletedFieldValue.length; i++) {
@@ -67,12 +69,13 @@ public class SQLHandler {
                 deleteInstruction = deleteInstruction + condition[i] + ";";
             }
         }
+        return deleteInstruction;
     }// end of delete
 
 
 
     //INSERT INTO table (column1 [, column2, column3 ... ]) VALUES (value1 [, value2, value3 ... ])
-    public void insert(String tableName, String[] insertedField, String[] insertedValue){
+    public String insert(String tableName, String[] insertedField, String[] insertedValue){
         String deleteInstruction = new String("INSERT INTO " + tableName + " (");
 
         for (int i = 0; i < insertedField.length; i++) {
@@ -90,5 +93,6 @@ public class SQLHandler {
                 deleteInstruction = deleteInstruction + insertedValue[i] + ");";
             }
         }
+        return deleteInstruction;
     }// end of insert
 }
