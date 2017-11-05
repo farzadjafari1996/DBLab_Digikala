@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Created by Farzad on 10/22/2017.
  */
 public class State {
-    int userID;
+    long userID;
     StateNode.StateName currentState;
     String action;
 
@@ -24,10 +24,10 @@ public class State {
     public String getAction() {
         return action;
     }
-    public void setUserID(int userID){
+    public void setUserID(long userID){
         this.userID = userID;
     };
-    public int getUserID() {
+    public long getUserID() {
         return userID;
     }
     public void setCurrentState(StateNode.StateName currentState) {
@@ -37,7 +37,6 @@ public class State {
         return currentState;
     }
     void update(Connection connection){
-        System.out.println("Update");
         if(currentState ==  StateNode.StateName.Start) {
             if (action == "/Help") {
                 try {
@@ -82,7 +81,6 @@ public class State {
         }
     };
     void sendMessage(TelegramBot bot){
-        System.out.println("send message");
         if(currentState == StateNode.StateName.Start){
             SendMessage request = new SendMessage(userID, "Salam :D")
                     .parseMode(ParseMode.HTML)
