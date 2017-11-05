@@ -22,27 +22,32 @@ public class ActionListener {
                 // process updates
                 for (Update update : updates) {
                     try{
-
                         State state = new State();
                         SQLHandler sqlHandler = new SQLHandler();
                         long chatID = update.message().chat().id();
                         state.setUserID(chatID);
                         String action = update.message().text();
                         state.setAction(action);
-                        //ResultSet resultSet = connection.createStatement().executeQuery("select state from base where chatID = " + "'" + chatID + "'");
-                        ResultSet resultSet = connection.createStatement().executeQuery(sqlHandler.select("", new String[]{"0"}, new String[]{"0"}));
-                        //System.out.println(action);
-                        //System.out.println(chatID);
-                        if(resultSet.getRow() == 0) {
+                        ResultSet resultSet = connection.createStatement().executeQuery(sqlHandler.select("digiLab.users", new String[]{"state"}, new String[]{"chatID = " + Long.toString(chatID)}));
+                        int length = 0;
+                        resultSet.last();
+                        length = resultSet.getRow();
+                        resultSet.beforeFirst();
+                        if(length == 0) {
                             state.setCurrentState(StateNode.StateName.Start);//set initial state
                             //insert new row
+                            connection.createStatement().execute(sqlHandler.insert("digiLab.users", new String[]{"chatID, state"}, new String[]{Long.toString(chatID), StateNode.enum2string(StateNode.StateName.Start)}));
+                            state.setAction("/start");
+                            state.setCurrentState(StateNode.StateName.Start);
+                            state.sendMessage(bot);
                         }
                         else {
                             resultSet.next();
                             state.setCurrentState(stateNode.string2enum(resultSet.getString("state")));//set state that taken from db
+                            state.setAction(update.message().text());
+                            state.sendMessage(bot);
                             state.update(connection);
                         }
-                        state.sendMessage(bot);
                         //connection.createStatement().execute("insert into base(txt) values (\""+ update.message().text()+"\")");
                     }catch (SQLException e){e.printStackTrace();};
                 }

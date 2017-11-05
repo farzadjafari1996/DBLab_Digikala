@@ -9,6 +9,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Observer;
 
 /**
  * Created by Farzad on 10/22/2017.
@@ -36,87 +37,146 @@ public class State {
     public StateNode.StateName getCurrentState() {
         return currentState;
     }
-    void update(Connection connection){
-        if(currentState ==  StateNode.StateName.Start) {
-            if (action == "/Help") {
-                try {
-                    connection.createStatement().executeQuery("update base set state = "+ "'" + new StateNode().enum2string(StateNode.StateName.Help) + "'" +" where chatID = " + userID);
-                }catch(SQLException e){e.printStackTrace();};
-                currentState = StateNode.StateName.Help;
+    public void sendMessage(TelegramBot bot){
+        SendMessage request;
+        if(currentState.equals(StateNode.StateName.Start)){
+            if(this.getAction().equals("/start")) {
+                request = new SendMessage(userID, "سلام به بات دیجی کالا خوش آمدید !")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
             }
-            else if (action == "/Menu"){
-                try {
-                    connection.createStatement().executeQuery("update base set state = "+ "'" + new StateNode().enum2string(StateNode.StateName.Menu) + "'" +" where chatID = " + userID);
-                }catch(SQLException e){e.printStackTrace();};
-                currentState = StateNode.StateName.Menu;
+            else if(this.getAction().equals("/help")) {
+                request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
             }
-        }
-        else if(currentState ==  StateNode.StateName.Help) {
-            if (action == "/Help") {
-                try {
-                    connection.createStatement().executeQuery("update base set state = "+ "'" + new StateNode().enum2string(StateNode.StateName.Help) + "'" +" where chatID = " + userID);
-                }catch(SQLException e){e.printStackTrace();};
-                currentState = StateNode.StateName.Help;
-            }
-            else if (action == "/Menu"){
-                try {
-                    connection.createStatement().executeQuery("update base set state = "+ "'" + new StateNode().enum2string(StateNode.StateName.Menu) + "'" +" where chatID = " + userID);
-                }catch(SQLException e){e.printStackTrace();};
-                currentState = StateNode.StateName.Menu;
-            }
-        }
-        else if(currentState ==  StateNode.StateName.Menu) {
-            if (action == "/Help") {
-                try {
-                    connection.createStatement().executeQuery("update base set state = "+ "'" + new StateNode().enum2string(StateNode.StateName.Help) + "'" +" where chatID = " + userID);
-                }catch(SQLException e){e.printStackTrace();};
-                currentState = StateNode.StateName.Help;
-            }
-            else if (action == "/Menu"){
-                try {
-                    connection.createStatement().executeQuery("update base set state = "+ "'" + new StateNode().enum2string(StateNode.StateName.Menu) + "'" +" where chatID = " + userID);
-                }catch(SQLException e){e.printStackTrace();};
-                currentState = StateNode.StateName.Menu;
+            else{
+                request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
             }
         }
-    };
-    void sendMessage(TelegramBot bot){
-        if(currentState == StateNode.StateName.Start){
-            SendMessage request = new SendMessage(userID, "Salam :D")
-                    .parseMode(ParseMode.HTML)
-                    .disableWebPagePreview(true)
-                    .disableNotification(true)
-                    .replyToMessageId(1)
-                    .replyMarkup(new ForceReply());
+        else if(currentState.equals(StateNode.StateName.Help)){
+            if(this.getAction().equals("/help")) {
+                request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
+            }
+            else if(this.getAction().equals("/menu")) {
+                request = new SendMessage(userID, "هر دستوری را که مایلید انتخاب کنید تا وارد مراحل بعدی شوید." + "\n 1.خرید \n 2.مقایسه \n 3.جستجو")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
+            }
 
-            SendResponse sendResponse = bot.execute(request);
-            boolean ok = sendResponse.isOk();
-            Message message = sendResponse.message();
-
-        }
-        else if(currentState == StateNode.StateName.Help){
-            SendMessage request = new SendMessage(userID, "Salam help :D")
-                    .parseMode(ParseMode.HTML)
-                    .disableWebPagePreview(true)
-                    .disableNotification(true)
-                    .replyToMessageId(1)
-                    .replyMarkup(new ForceReply());
-
-            SendResponse sendResponse = bot.execute(request);
-            boolean ok = sendResponse.isOk();
-            Message message = sendResponse.message();
+            else{
+                request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
+            }
         }
         else if(currentState == StateNode.StateName.Menu){
-            SendMessage request = new SendMessage(userID, "Salam menu :D")
+            if(this.getAction().equals("/menu")) {
+                request = new SendMessage(userID, "هر دستوری را که مایلید انتخاب کنید تا وارد مراحل بعدی شوید." + "\n 1.خرید \n 2.مقایسه \n 3.جستجو")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
+            }
+            else{
+                request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0)
+                        .replyMarkup(new ForceReply());
+            }
+        }
+        else{
+            request = new SendMessage(userID, "یا للعجبا.")
                     .parseMode(ParseMode.HTML)
                     .disableWebPagePreview(true)
                     .disableNotification(true)
-                    .replyToMessageId(1)
+                    .replyToMessageId(0)
                     .replyMarkup(new ForceReply());
-
-            SendResponse sendResponse = bot.execute(request);
-            boolean ok = sendResponse.isOk();
-            Message message = sendResponse.message();
         }
+        SendResponse sendResponse = bot.execute(request);
+        boolean ok = sendResponse.isOk();
+        Message message = sendResponse.message();
+    };
+    void update(Connection connection){
+        adminStateMachineHandler(connection);
+        userStateMachineHandler(connection);
+    };
+
+    //user state machine handler
+    private void userStateMachineHandler(Connection connection)
+    {
+        SQLHandler sqlHandler = new SQLHandler();
+        if(currentState.equals(StateNode.StateName.Start)) {
+            if (action.equals("/help")) {
+                try {
+                    connection.createStatement().execute(sqlHandler.update("digiLab.users", new String[]{"state = 'Help'"}, new String[]{"chatID = " + Long.toString(this.getUserID())}));;
+                    this.setCurrentState(StateNode.StateName.Help);
+                }catch(SQLException e){e.printStackTrace();};
+                currentState = StateNode.StateName.Help;
+            }
+        }
+        else if(currentState.equals(StateNode.StateName.Help)) {
+            if (action.equals("/menu")){
+                try {
+                    connection.createStatement().execute(sqlHandler.update("digiLab.users", new String[]{"state = 'Menu'"}, new String[]{"chatID = " + Long.toString(this.getUserID())}));;
+                    this.setCurrentState(StateNode.StateName.Menu);
+                }catch(SQLException e){e.printStackTrace();};
+                currentState = StateNode.StateName.Menu;
+            }
+        }
+        else if(currentState.equals(StateNode.StateName.Menu)) {
+            //TODO add menu and other items
+        }
+    }
+
+    //admin state machine handler
+    private void adminStateMachineHandler(Connection connection){
+        SQLHandler sqlHandler = new SQLHandler();
+        if(currentState.equals(StateNode.StateName.Admin_Start)) {
+            if (action.equals("/admin_help")) {
+                try {
+                    connection.createStatement().execute(sqlHandler.update("digiLab.users", new String[]{"state = 'Admin_Help'"}, new String[]{"chatID = " + Long.toString(this.getUserID())}));;
+                    this.setCurrentState(StateNode.StateName.Admin_Help);
+                }catch(SQLException e){e.printStackTrace();};
+                currentState = StateNode.StateName.Admin_Help;
+            }
+            //TODO add reset state
+        }
+        else if(currentState.equals(StateNode.StateName.Admin_Help)) {
+            if (action.equals("/admin_menu")){
+                try {
+                    connection.createStatement().execute(sqlHandler.update("digiLab.users", new String[]{"state = 'Admin_Menu'"}, new String[]{"chatID = " + Long.toString(this.getUserID())}));;
+                    this.setCurrentState(StateNode.StateName.Admin_Menu);
+                }catch(SQLException e){e.printStackTrace();};
+                currentState = StateNode.StateName.Admin_Menu;
+            }
+            //TODO add reset state
+        }
+        //TODO add menu state
     };
 }
