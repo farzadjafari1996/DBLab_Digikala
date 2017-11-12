@@ -2,7 +2,11 @@ package com.dblab;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.SendResponse;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -39,16 +43,22 @@ public class ActionListener {
                             connection.createStatement().execute(sqlHandler.insert("digiLab.users", new String[]{"chatID, state"}, new String[]{Long.toString(chatID), StateNode.enum2string(StateNode.StateName.Start)}));
                             state.setAction("/start");
                             state.setCurrentState(StateNode.StateName.Start);
-                            state.sendMessage(bot);
+                            SendMessage request = null;
+                            request = new SendMessage(chatID,"سلام به بات دیجی کالا خوش آمدید !")
+                                    .parseMode(ParseMode.HTML)
+                                    .disableWebPagePreview(true)
+                                    .disableNotification(true)
+                                    .replyToMessageId(0);
+                            SendResponse sendResponse = bot.execute(request);
+                            boolean ok = sendResponse.isOk();
+                            Message message = sendResponse.message();
                         }
                         else {
                             resultSet.next();
                             state.setCurrentState(stateNode.string2enum(resultSet.getString("state")));//set state that taken from db
                             state.setAction(update.message().text());
-                            state.sendMessage(bot);
-                            state.update(connection);
+                            state.update(connection, bot);
                         }
-                        //connection.createStatement().execute("insert into base(txt) values (\""+ update.message().text()+"\")");
                     }catch (SQLException e){e.printStackTrace();};
                 }
                 return UpdatesListener.CONFIRMED_UPDATES_ALL;

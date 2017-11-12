@@ -8,9 +8,8 @@ public class StateNode {
         Start,
         Menu,
         Show,
-        Admin_Start,
-        Admin_Add,
-        Admin_Delete
+        Add,
+        Delete
     };
     public static String enum2string(StateName stateName){
         String finalAnswer = new String();
@@ -20,12 +19,10 @@ public class StateNode {
             finalAnswer = "Menu";
         else if(stateName.equals(StateName.Show))
             finalAnswer = "Show";
-        else if(stateName.equals(StateName.Admin_Start))
-            finalAnswer = "Admin_Start";
-        else if(stateName.equals(StateName.Admin_Add))
-            finalAnswer = "Admin_Add";
-        else if(stateName.equals(StateName.Admin_Delete))
-            finalAnswer = "Admin_Delete";
+        else if(stateName.equals(StateName.Add))
+            finalAnswer = "Add";
+        else if(stateName.equals(StateName.Delete))
+            finalAnswer = "Delete";
         return finalAnswer;
     };
     public StateName string2enum(String string){
@@ -36,12 +33,10 @@ public class StateNode {
             st = StateName.Menu;
         else if(string.equals("Show"))
             st = StateName.Show;
-        else if(string.equals("Admin_Start"))
-            st = StateName.Admin_Start;
-        else if(string.equals("Admin_Add"))
-            st = StateName.Admin_Add;
-        else if(string.equals("Admin_Delete"))
-            st = StateName.Admin_Delete;
+        else if(string.equals("Add"))
+            st = StateName.Add;
+        else if(string.equals("Delete"))
+            st = StateName.Delete;
         return st;
     };
 }
