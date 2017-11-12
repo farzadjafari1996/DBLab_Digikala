@@ -37,17 +37,31 @@ public class State {
         return currentState;
     }
     public void sendMessage(TelegramBot bot){
-        SendMessage request;
+        SendMessage request = null;
+        userMessageSender(request);
+        SendResponse sendResponse = bot.execute(request);
+        boolean ok = sendResponse.isOk();
+        Message message = sendResponse.message();
+    };
+    void update(Connection connection){
+        adminStateMachineHandler(connection);
+        userStateMachineHandler(connection);
+    };
+
+    //admin message sender
+
+    //user message sender
+    private void userMessageSender(SendMessage request){
         if(currentState.equals(StateNode.StateName.Start)){
             if(this.getAction().equals("/start")) {
-                request = new SendMessage(userID, "سلام به بات دیجی کالا خوش آمدید !")
+                request = new SendMessage(userID, "سلام ادمین به بات دیجی کالا خوش آمدید !")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
                         .replyToMessageId(0);
             }
             else if(this.getAction().equals("/help")) {
-                request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه کنید.")
+                request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه. و محصول اضافه کنید.")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
@@ -76,7 +90,7 @@ public class State {
                         .replyToMessageId(0);
             }
 
-                else{
+            else{
                 request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
@@ -107,14 +121,7 @@ public class State {
                     .disableNotification(true)
                     .replyToMessageId(0);
         }
-        SendResponse sendResponse = bot.execute(request);
-        boolean ok = sendResponse.isOk();
-        Message message = sendResponse.message();
-    };
-    void update(Connection connection){
-        adminStateMachineHandler(connection);
-        userStateMachineHandler(connection);
-    };
+    }
 
     //user state machine handler
     private void userStateMachineHandler(Connection connection)
