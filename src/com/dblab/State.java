@@ -49,6 +49,77 @@ public class State {
     };
 
     //admin message sender
+    private void adminMessageSender(SendMessage request){
+        if(currentState.equals(StateNode.StateName.Start)){
+            if(this.getAction().equals("/start")) {
+                request = new SendMessage(userID, "سلام ادمین به بات دیجی کالا خوش آمدید !")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+            else if(this.getAction().equals("/help")) {
+                request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه. و محصول اضافه کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);            }
+            else{
+                request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+        }
+        else if(currentState.equals(StateNode.StateName.Help)){
+            if(this.getAction().equals("/help")) {
+                request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+            else if(this.getAction().equals("/menu")) {
+                request = new SendMessage(userID, "هر دستوری را که مایلید انتخاب کنید تا وارد مراحل بعدی شوید." + "\n 1.خرید \n 2.مقایسه \n 3.جستجو")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+
+            else{
+                request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+        }
+        else if(currentState == StateNode.StateName.Menu){
+            if(this.getAction().equals("/menu")) {
+                request = new SendMessage(userID, "هر دستوری را که مایلید انتخاب کنید تا وارد مراحل بعدی شوید." + "\n 1.خرید \n 2.مقایسه \n 3.جستجو")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+            else{
+                request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
+                        .parseMode(ParseMode.HTML)
+                        .disableWebPagePreview(true)
+                        .disableNotification(true)
+                        .replyToMessageId(0);
+            }
+        }
+        else{
+            request = new SendMessage(userID, "یا للعجبا.")
+                    .parseMode(ParseMode.HTML)
+                    .disableWebPagePreview(true)
+                    .disableNotification(true)
+                    .replyToMessageId(0);
+        }
+    }
 
     //user message sender
     private void userMessageSender(SendMessage request){
