@@ -9,7 +9,6 @@ import com.pengrad.telegrambot.response.SendResponse;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Observer;
 
 /**
  * Created by Farzad on 10/22/2017.
@@ -45,24 +44,20 @@ public class State {
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
             else if(this.getAction().equals("/help")) {
                 request = new SendMessage(userID, "در این بات شما میتوانید در سایت دیجی کالا گردش کنید و محصولات متفاوت را مقایسه کنید.")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
-            }
+                        .replyToMessageId(0);            }
             else{
                 request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
         }
         else if(currentState.equals(StateNode.StateName.Help)){
@@ -71,25 +66,22 @@ public class State {
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
             else if(this.getAction().equals("/menu")) {
                 request = new SendMessage(userID, "هر دستوری را که مایلید انتخاب کنید تا وارد مراحل بعدی شوید." + "\n 1.خرید \n 2.مقایسه \n 3.جستجو")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
 
-            else{
+                else{
                 request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
         }
         else if(currentState == StateNode.StateName.Menu){
@@ -98,16 +90,14 @@ public class State {
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
             else{
                 request = new SendMessage(userID, "دستور اشتباه وارد کرده اید. لطفا دستور درست را وارد کنید.")
                         .parseMode(ParseMode.HTML)
                         .disableWebPagePreview(true)
                         .disableNotification(true)
-                        .replyToMessageId(0)
-                        .replyMarkup(new ForceReply());
+                        .replyToMessageId(0);
             }
         }
         else{
@@ -115,8 +105,7 @@ public class State {
                     .parseMode(ParseMode.HTML)
                     .disableWebPagePreview(true)
                     .disableNotification(true)
-                    .replyToMessageId(0)
-                    .replyMarkup(new ForceReply());
+                    .replyToMessageId(0);
         }
         SendResponse sendResponse = bot.execute(request);
         boolean ok = sendResponse.isOk();
